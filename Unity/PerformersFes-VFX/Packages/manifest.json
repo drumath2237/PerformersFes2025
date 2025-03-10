@@ -5,6 +5,7 @@
     "com.unity.render-pipelines.high-definition": "17.0.3",
     "com.unity.timeline": "1.8.8",
     "com.unity.ugui": "2.0.0",
+    "org.nuget.microsoft.azure.kinect.sensor": "1.4.2",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
     "com.unity.modules.audio": "1.0.0",
@@ -25,5 +26,15 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  }
+  },
+  "scopedRegistries": [
+    {
+      "name": "Unity NuGet",
+      "url": "https://unitynuget-registry.openupm.com/",
+      "scopes": [
+        "org.nuget"
+      ],
+      "overrideBuiltIns": false
+    }
+  ]
 }
