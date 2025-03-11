@@ -34,6 +34,7 @@ namespace PerformersFes
         private ushort[] _depthImageBuffer;
 
         private Texture2D _colorTexture;
+        private Texture2D _depthTexture;
 
         [SerializeField] private Material planeMaterial;
         [SerializeField] private MeshRenderer planeMeshRenderer;
@@ -47,9 +48,11 @@ namespace PerformersFes
             _depthImageBuffer = new ushort[1280 * 720];
 
             _colorTexture = new Texture2D(1280, 720, TextureFormat.RGBA32, false);
-            planeMaterial.SetTexture("_MainTex", _colorTexture);
+            _depthTexture = new Texture2D(1280,720,TextureFormat.R16, false);
+            
+            planeMaterial.SetTexture("_MainTex", _depthTexture);
             planeMeshRenderer.material = planeMaterial;
-
+            
             _kinect = Device.Open();
 
             _kinect.StartCameras(new DeviceConfiguration
@@ -76,6 +79,9 @@ namespace PerformersFes
 
             _colorTexture.LoadRawTextureData(_colorImageBuffer);
             _colorTexture.Apply();
+
+            _depthTexture.SetPixelData(_depthImageBuffer, 0);
+            _depthTexture.Apply();
         }
 
         private async Awaitable RunCaptureLoopAsync(
