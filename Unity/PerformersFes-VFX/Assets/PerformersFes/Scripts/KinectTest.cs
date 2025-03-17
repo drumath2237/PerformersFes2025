@@ -1,10 +1,8 @@
-using System;
-using System.Linq;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Kinect.Sensor;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering;
 
 namespace PerformersFes
 {
@@ -26,6 +24,7 @@ namespace PerformersFes
 
     public class KinectTest : MonoBehaviour
     {
+        private static readonly int MainTexProperty = Shader.PropertyToID("_MainTex");
         private Device _kinect;
 
         private bool _isRunning;
@@ -40,19 +39,19 @@ namespace PerformersFes
         [SerializeField] private MeshRenderer planeMeshRenderer;
 
 
-        public event Action<KinectImageData> OnCapture = null;
+        public event Action<KinectImageData> OnCapture;
 
         private void Start()
         {
-            _colorImageBuffer = new Byte[1280 * 720 * 4];
+            _colorImageBuffer = new byte[1280 * 720 * 4];
             _depthImageBuffer = new ushort[1280 * 720];
 
             _colorTexture = new Texture2D(1280, 720, TextureFormat.RGBA32, false);
-            _depthTexture = new Texture2D(1280,720,TextureFormat.R16, false);
-            
-            planeMaterial.SetTexture("_MainTex", _depthTexture);
+            _depthTexture = new Texture2D(1280, 720, TextureFormat.R16, false);
+
+            planeMaterial.SetTexture(MainTexProperty, _colorTexture);
             planeMeshRenderer.material = planeMaterial;
-            
+
             _kinect = Device.Open();
 
             _kinect.StartCameras(new DeviceConfiguration
@@ -61,7 +60,7 @@ namespace PerformersFes
                 DepthMode = DepthMode.NFOV_Unbinned,
                 SynchronizedImagesOnly = true,
                 ColorResolution = ColorResolution.R720p,
-                CameraFPS = FPS.FPS30
+                CameraFPS = FPS.FPS30,
             });
             //
             _isRunning = true;
@@ -90,6 +89,8 @@ namespace PerformersFes
         {
             while (_isRunning && !token.IsCancellationRequested)
             {
+                var sleepTask = Task.Delay(1000 / 15, token);
+
                 var image = await Task.Run(() =>
                 {
                     using var capture = _kinect.GetCapture();
@@ -121,6 +122,8 @@ namespace PerformersFes
 
                 // await Awaitable.MainThreadAsync();
                 OnCapture?.Invoke(image);
+
+                await sleepTask;
             }
         }
 
