@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -133,6 +133,9 @@ namespace PerformersFes
 
             _colorImageBuffer = null;
             _depthImageBuffer = null;
+
+            _colorTexture = null;
+            _depthTexture = null;
 
             OnCapture -= OnCapture_Callback;
         }
