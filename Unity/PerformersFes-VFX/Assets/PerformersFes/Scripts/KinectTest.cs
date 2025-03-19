@@ -2,7 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Kinect.Sensor;
+using Unity.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace PerformersFes
 {
@@ -24,7 +26,6 @@ namespace PerformersFes
 
     public class KinectTest : MonoBehaviour
     {
-        private static readonly int MainTexProperty = Shader.PropertyToID("_MainTex");
         private Device _kinect;
 
         private bool _isRunning;
@@ -32,12 +33,11 @@ namespace PerformersFes
         private byte[] _colorImageBuffer;
         private ushort[] _depthImageBuffer;
 
-        private Texture2D _colorTexture;
-        private Texture2D _depthTexture;
+        // [SerializeField]
+        private Texture2D colorTexture;
 
-        [SerializeField] private Material planeMaterial;
-        [SerializeField] private MeshRenderer planeMeshRenderer;
-
+        // [SerializeField]
+        private Texture2D depthTexture;
 
         public event Action<KinectImageData> OnCapture;
 
@@ -46,11 +46,8 @@ namespace PerformersFes
             _colorImageBuffer = new byte[1280 * 720 * 4];
             _depthImageBuffer = new ushort[1280 * 720];
 
-            _colorTexture = new Texture2D(1280, 720, TextureFormat.RGBA32, false);
-            _depthTexture = new Texture2D(1280, 720, TextureFormat.R16, false);
-
-            planeMaterial.SetTexture(MainTexProperty, _colorTexture);
-            planeMeshRenderer.material = planeMaterial;
+            colorTexture = new Texture2D(1280, 720, TextureFormat.RGBA32, false);
+            depthTexture = new Texture2D(1280, 720, TextureFormat.R16, false);
 
             _kinect = Device.Open();
 
@@ -62,28 +59,32 @@ namespace PerformersFes
                 ColorResolution = ColorResolution.R720p,
                 CameraFPS = FPS.FPS30,
             });
-            //
+
+            var intrinsics = _kinect.GetCalibration().ColorCameraCalibration.Intrinsics.Parameters;
+            var (cx, cy, fx, fy) = (intrinsics[0], intrinsics[1], intrinsics[2], intrinsics[3]);
+            Debug.Log($"{fx}, {fy}, {cx}, {cy}");
+
             _isRunning = true;
-            //
             OnCapture += OnCapture_Callback;
 
             _ = RunCaptureLoopAsync(destroyCancellationToken);
         }
 
+
         private void OnCapture_Callback(KinectImageData imageData)
         {
-            Debug.Log(imageData.Width + " x " + imageData.Height);
-            Debug.Log($"color:{imageData.ColorImageByteSize} depth:{imageData.DepthImageSize}");
+            // Debug.Log(imageData.Width + " x " + imageData.Height);
+            // Debug.Log($"color:{imageData.ColorImageByteSize} depth:{imageData.DepthImageSize}");
+            //
+            //
+            colorTexture.LoadRawTextureData(_colorImageBuffer);
+            colorTexture.Apply();
 
-
-            _colorTexture.LoadRawTextureData(_colorImageBuffer);
-            _colorTexture.Apply();
-
-            _depthTexture.SetPixelData(_depthImageBuffer, 0);
-            _depthTexture.Apply();
+            depthTexture.SetPixelData(_depthImageBuffer, 0);
+            depthTexture.Apply();
         }
 
-        private async Awaitable RunCaptureLoopAsync(
+        private async Task RunCaptureLoopAsync(
             CancellationToken token
         )
         {
@@ -137,8 +138,8 @@ namespace PerformersFes
             _colorImageBuffer = null;
             _depthImageBuffer = null;
 
-            _colorTexture = null;
-            _depthTexture = null;
+            colorTexture = null;
+            depthTexture = null;
 
             OnCapture -= OnCapture_Callback;
         }

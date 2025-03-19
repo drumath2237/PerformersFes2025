@@ -570,6 +570,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1520717397}
   - component: {fileID: 1520717396}
+  - component: {fileID: 1520717398}
   m_Layer: 0
   m_Name: kinect
   m_TagString: Untagged
@@ -589,8 +590,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99ab0ecf53954a6c9be7538f2ebfaf3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planeMaterial: {fileID: 2100000, guid: a85172c853738c84eafad6bc3a364ee5, type: 2}
-  planeMeshRenderer: {fileID: 509002947}
 --- !u!4 &1520717397
 Transform:
   m_ObjectHideFlags: 0
@@ -606,6 +605,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1520717398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1520717395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe9c952ff6b340ebbea29ae9a9089ce2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
