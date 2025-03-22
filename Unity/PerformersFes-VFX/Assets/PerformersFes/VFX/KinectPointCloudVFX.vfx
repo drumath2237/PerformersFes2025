@@ -643,7 +643,7 @@ VisualEffectResource:
   m_Infos:
     m_RendererSettings:
       motionVectorGenerationMode: 0
-      shadowCastingMode: 1
+      shadowCastingMode: 0
       rayTracingMode: 0
       receiveShadows: 0
       reflectionProbeUsage: 0
@@ -2763,7 +2763,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 0.2
+      m_SerializableObject: 1
     m_Space: -1
   m_Property:
     name: _Lifetime
@@ -4797,7 +4797,7 @@ MonoBehaviour:
   indirectDraw: 0
   computeCulling: 0
   frustumCulling: 0
-  castShadows: 1
+  castShadows: 0
   useExposureWeight: 0
   enableRayTracing: 0
   decimationFactor: 1
@@ -5133,7 +5133,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 300000
+      m_SerializableObject: 900000
     m_Space: -1
   m_Property:
     name: Rate
@@ -7103,7 +7103,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: False
+      m_SerializableObject: True
     m_Space: -1
   m_Property:
     name: _vfx_enabled

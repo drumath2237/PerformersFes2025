@@ -2,9 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Kinect.Sensor;
-using Unity.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace PerformersFes
 {
@@ -39,6 +37,8 @@ namespace PerformersFes
 
         private byte[] _colorImageBuffer;
         private ushort[] _depthImageBuffer;
+
+        private Transformation _cameraTransformation;
 
         // [SerializeField]
         public Texture2D ColorTexture { get; private set; }
@@ -75,6 +75,7 @@ namespace PerformersFes
             var intrinsics = _kinect.GetCalibration().ColorCameraCalibration.Intrinsics.Parameters;
             var (cx, cy, fx, fy) = (intrinsics[0], intrinsics[1], intrinsics[2], intrinsics[3]);
             // Debug.Log($"{fx}, {fy}, {cx}, {cy}");
+            _cameraTransformation = _kinect.GetCalibration().CreateTransformation();
 
             _isRunning = true;
             OnCapture += OnCapture_Callback;
@@ -115,12 +116,12 @@ namespace PerformersFes
                 {
                     using var capture = _kinect.GetCapture();
 
-                    var calibration = _kinect.GetCalibration();
-                    using var transformation = calibration.CreateTransformation();
-                    using var depthImage = transformation.DepthImageToColorCamera(capture);
+                    // var calibration = _kinect.GetCalibration();
+                    using var depthImage = _cameraTransformation.DepthImageToColorCamera(capture);
                     using var colorImage = capture.Color;
 
                     depthImage.GetPixels<ushort>().CopyTo(_depthImageBuffer);
+
                     var colorSpan = colorImage.GetPixels<BGRA>().Span;
                     for (var i = 0; i < colorSpan.Length; i++)
                     {
@@ -131,8 +132,8 @@ namespace PerformersFes
                     }
 
                     var kinectImage = new KinectImageData(
-                        calibration.ColorCameraCalibration.ResolutionWidth,
-                        calibration.ColorCameraCalibration.ResolutionHeight,
+                        1280,
+                        720,
                         colorImage.Memory.Length,
                         1280 * 720
                     );
@@ -150,6 +151,7 @@ namespace PerformersFes
         private void OnDestroy()
         {
             _isRunning = false;
+            _cameraTransformation?.Dispose();
             _kinect?.StopCameras();
             _kinect?.Dispose();
             _kinect = null;
