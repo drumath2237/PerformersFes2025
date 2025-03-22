@@ -66,7 +66,7 @@ namespace PerformersFes
             _kinect.StartCameras(new DeviceConfiguration
             {
                 ColorFormat = ImageFormat.ColorBGRA32,
-                DepthMode = DepthMode.NFOV_Unbinned,
+                DepthMode = DepthMode.NFOV_2x2Binned,
                 SynchronizedImagesOnly = true,
                 ColorResolution = ColorResolution.R720p,
                 CameraFPS = FPS.FPS30,
@@ -109,7 +109,7 @@ namespace PerformersFes
         {
             while (_isRunning && !token.IsCancellationRequested)
             {
-                var sleepTask = Task.Delay(1000 / 15, token);
+                // var sleepTask = Task.Delay(1000 / 15, token);
 
                 var image = await Task.Run(() =>
                 {
@@ -143,7 +143,7 @@ namespace PerformersFes
                 // await Awaitable.MainThreadAsync();
                 OnCapture?.Invoke(image);
 
-                await sleepTask;
+                // await sleepTask;
             }
         }
 
