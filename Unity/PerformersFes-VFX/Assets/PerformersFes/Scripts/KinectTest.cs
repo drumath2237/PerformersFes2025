@@ -24,6 +24,13 @@ namespace PerformersFes
         }
     }
 
+    public struct StartCameraEventParams
+    {
+        public Vector2 Resolution;
+        public Vector2 FocalPoint;
+        public Vector2 OpticalPoint;
+    }
+
     public class KinectTest : MonoBehaviour
     {
         private Device _kinect;
@@ -34,20 +41,25 @@ namespace PerformersFes
         private ushort[] _depthImageBuffer;
 
         // [SerializeField]
-        private Texture2D colorTexture;
+        public Texture2D ColorTexture { get; private set; }
 
         // [SerializeField]
-        private Texture2D depthTexture;
+        public Texture2D DepthTexture { get; private set; }
 
         public event Action<KinectImageData> OnCapture;
+
+        public event Action<StartCameraEventParams> OnStartCamera;
 
         private void Start()
         {
             _colorImageBuffer = new byte[1280 * 720 * 4];
             _depthImageBuffer = new ushort[1280 * 720];
 
-            colorTexture = new Texture2D(1280, 720, TextureFormat.RGBA32, false);
-            depthTexture = new Texture2D(1280, 720, TextureFormat.R16, false);
+            ColorTexture = new Texture2D(1280, 720, TextureFormat.RGBA32, false);
+            DepthTexture = new Texture2D(1280, 720, TextureFormat.R16, false)
+            {
+                filterMode = FilterMode.Point
+            };
 
             _kinect = Device.Open();
 
@@ -62,10 +74,17 @@ namespace PerformersFes
 
             var intrinsics = _kinect.GetCalibration().ColorCameraCalibration.Intrinsics.Parameters;
             var (cx, cy, fx, fy) = (intrinsics[0], intrinsics[1], intrinsics[2], intrinsics[3]);
-            Debug.Log($"{fx}, {fy}, {cx}, {cy}");
+            // Debug.Log($"{fx}, {fy}, {cx}, {cy}");
 
             _isRunning = true;
             OnCapture += OnCapture_Callback;
+
+            OnStartCamera?.Invoke(new StartCameraEventParams
+            {
+                Resolution = new Vector2(ColorTexture.width, ColorTexture.height),
+                FocalPoint = new Vector2(fx, fy),
+                OpticalPoint = new Vector2(cx, cy),
+            });
 
             _ = RunCaptureLoopAsync(destroyCancellationToken);
         }
@@ -77,11 +96,11 @@ namespace PerformersFes
             // Debug.Log($"color:{imageData.ColorImageByteSize} depth:{imageData.DepthImageSize}");
             //
             //
-            colorTexture.LoadRawTextureData(_colorImageBuffer);
-            colorTexture.Apply();
+            ColorTexture.LoadRawTextureData(_colorImageBuffer);
+            ColorTexture.Apply();
 
-            depthTexture.SetPixelData(_depthImageBuffer, 0);
-            depthTexture.Apply();
+            DepthTexture.SetPixelData(_depthImageBuffer, 0);
+            DepthTexture.Apply();
         }
 
         private async Task RunCaptureLoopAsync(
@@ -138,8 +157,8 @@ namespace PerformersFes
             _colorImageBuffer = null;
             _depthImageBuffer = null;
 
-            colorTexture = null;
-            depthTexture = null;
+            ColorTexture = null;
+            DepthTexture = null;
 
             OnCapture -= OnCapture_Callback;
         }
