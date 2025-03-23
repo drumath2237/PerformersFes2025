@@ -62,7 +62,7 @@ namespace PerformersFes
                     if (micList == null || micList.Length == 0)
                     {
                         Debug.LogError("microphones are not found or initialized!");
-                        return;
+                        micList = Microphone.devices;
                     }
 
                     var micName = micList[micIndex];
