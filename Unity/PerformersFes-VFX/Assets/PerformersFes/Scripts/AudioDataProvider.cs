@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PerformersFes
 {
-    internal enum AudioProvideType
+    public enum AudioProvideType
     {
         Microphone,
         SampleAudioClip
@@ -24,7 +24,6 @@ namespace PerformersFes
         [SerializeField]
         private string[] micList;
 
-
         [SerializeField]
         private int micIndex;
 
@@ -32,15 +31,31 @@ namespace PerformersFes
         [SerializeField]
         private AudioClip sampleAudioDataClip;
 
-        private void OnEnable()
+        private bool _isMicrophoneRunning;
+
+        private void Start()
         {
             micList = Microphone.devices;
-            // audioSource.GetSpectrumData(new[] { 0.0f }, 0, FFTWindow.BlackmanHarris);
-            _ = StartAudioSource();
+        }
+
+        public void SetAudioProvideType(AudioProvideType @type)
+        {
+            audioProvideType = @type;
+        }
+
+        public void SetMicIndex(int index)
+        {
+            micIndex = index;
         }
 
         public async Task StartAudioSource()
         {
+            if (_isMicrophoneRunning)
+            {
+                Debug.LogError("microphone has already started!");
+                return;
+            }
+
             switch (audioProvideType)
             {
                 case AudioProvideType.Microphone:
@@ -74,6 +89,21 @@ namespace PerformersFes
             }
 
             audioSource.Play();
+        }
+
+        public void StopAudio()
+        {
+            if (_isMicrophoneRunning)
+            {
+                Microphone.End(micList[micIndex]);
+            }
+
+            _isMicrophoneRunning = false;
+        }
+
+        private void OnDestroy()
+        {
+            StopAudio();
         }
     }
 }
