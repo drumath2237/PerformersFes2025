@@ -1,13 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.VFX;
 
 namespace PerformersFes
 {
     public class KinectVFXController : MonoBehaviour
     {
-        [SerializeField]
-        private KinectTest kinectBehaviour;
-
         [SerializeField]
         private VisualEffect kinectVFXGraph;
 
@@ -19,27 +17,23 @@ namespace PerformersFes
 
         private void Start()
         {
-            if (kinectBehaviour == null || kinectVFXGraph == null)
+            kinectVFXGraph.gameObject.SetActive(true);
+        }
+
+
+        public void SetKinectProperties(StartCameraEventParams @params, Texture2D colorTexture, Texture2D depthTexture)
+        {
+            if (kinectVFXGraph == null)
             {
-                Debug.LogError("asset not attached correctly");
+                Debug.LogError("kinect vfx asset not attached!");
                 return;
             }
 
-            kinectBehaviour.OnStartCamera += OnCameraStarted_SetVFXAttributes;
-        }
-
-        private void OnDestroy()
-        {
-            kinectBehaviour.OnStartCamera -= OnCameraStarted_SetVFXAttributes;
-        }
-
-        private void OnCameraStarted_SetVFXAttributes(StartCameraEventParams @params)
-        {
             kinectVFXGraph.SetVector2(_resolutionShaderProperty, @params.Resolution);
             kinectVFXGraph.SetVector2(_focalPointProperty, @params.FocalPoint);
             kinectVFXGraph.SetVector2(_opticalPointProperty, @params.OpticalPoint);
-            kinectVFXGraph.SetTexture(_depthTextureProperty, kinectBehaviour.DepthTexture);
-            kinectVFXGraph.SetTexture(_colorTextureProperty, kinectBehaviour.ColorTexture);
+            kinectVFXGraph.SetTexture(_depthTextureProperty, depthTexture);
+            kinectVFXGraph.SetTexture(_colorTextureProperty, colorTexture);
         }
     }
 }
