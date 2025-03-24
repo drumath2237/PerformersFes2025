@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.VFX;
 
 namespace PerformersFes
@@ -13,6 +14,11 @@ namespace PerformersFes
         private readonly int _colorTextureProperty = Shader.PropertyToID("ColorTexture");
         private readonly int _focalPointProperty = Shader.PropertyToID("FocalPoint");
         private readonly int _opticalPointProperty = Shader.PropertyToID("OpticalPoint");
+
+        private void Start()
+        {
+            kinectVFXGraph.gameObject.SetActive(true);
+        }
 
 
         public void SetKinectProperties(StartCameraEventParams @params, Texture2D colorTexture, Texture2D depthTexture)
