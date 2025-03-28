@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿// this script is referenced from sanukin39/UniFPSCounter.cs
+// https://gist.github.com/sanukin39/63bdfcf6c57466abe6d44ac5a79c5ca9
+
+using UnityEngine;
 
 /// <summary>
 /// ~  Fps counter for unity  ~

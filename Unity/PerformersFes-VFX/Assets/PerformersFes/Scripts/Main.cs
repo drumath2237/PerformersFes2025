@@ -5,7 +5,7 @@ namespace PerformersFes
     public class Main : MonoBehaviour
     {
         [SerializeField]
-        private KinectTest kinect;
+        private KinectBehaviour kinect;
 
         [SerializeField]
         private KinectVFXController kinectVFXController;

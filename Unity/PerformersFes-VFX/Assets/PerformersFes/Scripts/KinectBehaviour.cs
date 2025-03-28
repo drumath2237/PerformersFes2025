@@ -29,7 +29,7 @@ namespace PerformersFes
         public Vector2 OpticalPoint;
     }
 
-    public class KinectTest : MonoBehaviour
+    public class KinectBehaviour : MonoBehaviour
     {
         private Device _kinect;
 

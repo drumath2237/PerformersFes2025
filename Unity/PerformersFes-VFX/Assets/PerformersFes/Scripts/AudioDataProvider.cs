@@ -33,10 +33,6 @@ namespace PerformersFes
 
         private bool _isMicrophoneRunning;
 
-        private void Start()
-        {
-        }
-
         public void SetAudioProvideType(AudioProvideType @type)
         {
             audioProvideType = @type;
@@ -54,7 +50,7 @@ namespace PerformersFes
                 Debug.LogError("microphone has already started!");
                 return;
             }
-            
+
             micList = Microphone.devices;
 
 
