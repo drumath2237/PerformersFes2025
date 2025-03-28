@@ -1,6 +1,6 @@
 # Fork Guitar with VFX for IwakenLab Performers Fes
 
-![Static Badge](https://img.shields.io/badge/Unity-6000.0.41-blue?logo=unity&logoColor=%23FFFFFF)
+![Static Badge](https://img.shields.io/badge/Unity-6000.0.42-blue?logo=unity&logoColor=%23FFFFFF)
 
 
 ## About
@@ -12,7 +12,7 @@ IwakenLab Performers Fes 2025のリポジトリ
 ## Environment
 
 - Windows 11 Home
-- Unity 6000.0.41f1
+- Unity 6000.0.42f1
 - HDRP 17.0.4
 - VFX Graph
 - Azure Kinect Sensor SDK 1.4.2
